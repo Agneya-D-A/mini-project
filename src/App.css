@@ -2,6 +2,7 @@
   text-align: center;
   background-image: linear-gradient(#295EEC, #123288);
   padding: 2%;
+  max-height: 100vh;
 }
 
 .App-logo {
@@ -19,12 +20,13 @@
   background-color: #FBFBFD;
   min-height: 92vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   border-radius: 50px;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding: 5px;
 }
 
 .App-link {
