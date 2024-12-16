@@ -1,14 +1,28 @@
 import React, {useState, useContext} from 'react';
 import './Boxes.css';
 import { formContext } from '../App';
+import axios from 'axios';
+
+const conversionServerUrl = `http://127.0.0.1:3001`;
+
 
 export default function InputBox(){
 
     const {imageFile, setImageFile, imageUrl, setImageUrl} = useContext(formContext)
-    function handleFileChange(e){
+    async function handleFileChange(e){
         const file = e.target.files[0];
-        setImageFile(file);
-        setImageUrl(URL.createObjectURL(file));
+        if(!file) return;
+        const formData = new FormData();
+        formData.append('image',file);
+        try{
+            const file = await axios.post(`${conversionServerUrl}/input_tif`,formData,{responseType: 'blob'});
+            const url = URL.createObjectURL(file);
+            setImageFile(file);
+            setImageUrl(url);
+        }
+        catch(err){
+            console.log(err);
+        }
     }
 
     function getSegmentedImage(e){
