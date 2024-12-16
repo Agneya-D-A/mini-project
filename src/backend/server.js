@@ -1,15 +1,13 @@
 const express = require('express');
 const fs = require('fs');
-const cors = require('cors');
-const multer = require('multer');
-const http = require('http');
 const path = require('path');
-const convertapi = require('convertapi')('secret_wbnvbnq24jGH9fRR');
-
+const multer = require('multer');
+const sharp = require('sharp');
+const cors = require('cors');
 const app = express();
-const server = http.createServer(app);
+const server = require('http').createServer(app);
 
-// Middleware: CORS setup
+// CORS setup to allow frontend to access the backend
 app.use(cors({
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
@@ -17,56 +15,43 @@ app.use(cors({
     credentials: true
 }));
 
-// Multer setup for file uploads
-const upload = multer({ dest: 'src/backend/modded/' }); // Temporary folder for uploads
+// Multer setup to handle file uploads
+const upload = multer({ dest: 'src/backend/modded/' }); // Temporary storage folder
 
-// Function to convert TIFF to JPG using ConvertAPI
-const convertImage = async (filePath) => {
-    try {
-        console.log("Converting file...");
-        const result = await convertapi.convert('jpg', { File: filePath }, 'tiff');
+// Route to handle file upload and conversion
+app.post('/input_tif', upload.single('image'), (req, res) => {
+    const filePath = req.file.path; // Temporary file path from multer
+    const fileName = req.file.originalname.split('.')[0]; // Get the original file name (without extension)
 
-        // Save the converted file with a random .jpg name
-        const jpgName = `${Date.now()}.jpg`; // Generate unique file name
-        const savedPath = `src/backend/modded/${jpgName}`;
+    // Convert the .tif file to .jpg
+    const convertedFilePath = path.join('src/backend/modded', `${fileName}.jpg`);
 
-        await result.saveFiles(savedPath);
-        console.log('File converted and saved:', savedPath);
-        return savedPath;
-    } catch (err) {
-        console.error('Conversion error:', err);
-        return null; // Return null on error
-    }
-};
+    sharp(filePath)
+        .toFormat('jpg')
+        .toFile(convertedFilePath, (err, info) => {
+            if (err) {
+                console.log('Error during conversion:', err);
+                return res.status(500).send('Error converting the image');
+            }
 
-// Route: Handles TIFF file uploads and conversion
-app.post('/input_tif', upload.single('image'), async (req, res) => {
-    const filePath = req.file.path; // Temporary file path
-    console.log('Uploaded file:', filePath);
+            // Send the converted .jpg image as response
+            res.sendFile(path.resolve(convertedFilePath), (err) => {
+                if (err) {
+                    console.log('Error sending file:', err);
+                    return res.status(500).send('Error sending the file');
+                }
 
-    // Convert the file
-    const convertedPath = await convertImage(filePath);
-    if (!convertedPath) {
-        return res.status(500).send('Error converting the file');
-    }
-
-    // Send the converted file back to the client
-    res.sendFile(path.resolve(convertedPath), (err) => {
-        if (err) {
-            console.error('Error sending file:', err);
-            res.status(500).send('Error sending the file');
-        } else {
-            // Delete the temporary original file and converted file after sending
-            fs.unlink(filePath, () => console.log('Deleted original file:', filePath));
-            fs.unlink(convertedPath, () => console.log('Deleted converted file:', convertedPath));
-        }
-    });
+                // Clean up: delete the original file and the converted file after sending
+                fs.unlink(filePath, () => {}); // Delete original uploaded file
+                // fs.unlink(convertedFilePath, () => {}); // Delete converted file
+            });
+        });
 });
 
 // Start the server
 server.listen(3001, '127.0.0.1', (err) => {
     if (err) {
-        console.error('Server startup error:', err);
+        console.log('Server startup error:', err);
     } else {
         console.log("Server running on http://127.0.0.1:3001");
     }

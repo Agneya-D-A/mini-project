@@ -15,9 +15,9 @@ export default function InputBox(){
         const formData = new FormData();
         formData.append('image',file);
         try{
-            const file = await axios.post(`${conversionServerUrl}/input_tif`,formData,{responseType: 'blob'});
-            const url = URL.createObjectURL(file);
-            setImageFile(file);
+            const response = await axios.post(`${conversionServerUrl}/input_tif`,formData,{responseType: 'blob'});
+            const url = URL.createObjectURL(response.data);
+            setImageFile(response.data);
             setImageUrl(url);
         }
         catch(err){
