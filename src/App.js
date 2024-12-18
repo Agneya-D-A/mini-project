@@ -10,6 +10,7 @@ const formContext = createContext();
 function App() {
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [resultImage, setResultImage] = useState(null);
   return (
     <formContext.Provider value={{imageFile, setImageFile, imageUrl, setImageUrl}}>
     <div className="App">
