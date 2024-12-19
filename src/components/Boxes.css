@@ -1,10 +1,14 @@
 /* .input-box{
 
-}
-
-.output-box{
-
 } */
+
+/* .output-box{
+    padding-top: 20px;
+} */
+
+.output-image{
+    padding-top: 40px;
+}
 
 .box{
     min-height: 70vh;

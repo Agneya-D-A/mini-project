@@ -63,6 +63,7 @@ const overlayMask = async (imagePath, maskPath) => {
 
     // Draw the original image and overlay the mask
     ctx.drawImage(img, 0, 0, img.width, img.height);
+    ctx.globalAlpha = 0.5;
     ctx.drawImage(mask, 0, 0, img.width, img.height); // Mask overlay
 
     const overlayedImagePath = 'overlayed_image.png';
