@@ -1,5 +1,9 @@
 {
   "name": "mini-project-implementation",
+  "description": "Rocketry testbed software",
+  "author": "Agneya D A agneya181222da@gmail.com",
+  "main": "public/main.js",
+  "homepage": "./",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,8 +13,10 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.9",
     "canvas": "^2.11.2",
+    "concurrently": "^9.1.0",
     "convertapi": "^1.15.0",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "jimp": "^1.6.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.9",
@@ -19,13 +25,18 @@
     "react-scripts": "5.0.1",
     "sharp": "^0.33.5",
     "tiff.js": "^1.0.0",
+    "wait-on": "^8.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start-electron": "wait-on http://localhost:3000 && electron .",
+    "start-flask": "python src/backend/server.py",
+    "start-server": "wait-on http://localhost:3000 && nodemon src/backend/server.js",
+    "dev": "concurrently \"cross-env BROWSER=none npm run start\" \"npm run start-flask\" \"npm run start-server \" \"npm run start-electron \" "
   },
   "eslintConfig": {
     "extends": [
@@ -46,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
     "electron.js": "^0.0.1"
   }
