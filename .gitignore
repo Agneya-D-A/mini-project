@@ -9,8 +9,6 @@ node_modules
 
 # testing
 /coverage
-/src/backend/modded
-/static
 
 # production
 /build
@@ -25,3 +23,8 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/src/backend/modded/
+/src/backend/file_image.jpg
+/static
+/get-pip.py
