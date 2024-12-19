@@ -32,7 +32,8 @@ export default function InputBox(){
 
         const fetchMask = async ()=>{
             const flaskResponse = await axios.post('http://127.0.0.1:3001/fetch-mask',formData, {
-                headers: formData.getHeaders()
+                headers: {'Content-Type': 'multipart/form-data'},
+                responseType: 'blob'
             });
 
             setResultImage(flaskResponse.data);
