@@ -9,7 +9,7 @@ import requests
 app = Flask(__name__)
 
 # Load your TensorFlow model here
-model = tf.keras.models.load_model("src/backend/model/u_net_model_1.keras")
+model = tf.keras.models.load_model("model/u_net_model_1.keras")
 print("Model input shape:", model.input_shape)
 
 @app.route('/predict', methods=['POST'])

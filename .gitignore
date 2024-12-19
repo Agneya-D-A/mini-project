@@ -28,4 +28,3 @@ yarn-error.log*
 /src/backend/file_image.jpg
 /static
 /get-pip.py
-/src/backend/model
